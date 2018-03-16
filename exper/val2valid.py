@@ -17,6 +17,12 @@ if __name__=='__main__':
         full_img_name = l.split()[0] 
         img_name = full_img_name.split("/")[-1]
         img_id = img_name.split(".")[0]
+
+        find = img_id.find("0")
+        while find == 0 and len(img_id)>1:
+            img_id = img_id[1:]
+            find = img_id.find("0")
+
         fval_id.write(str(img_id) + "\n")
 
     fval.close()

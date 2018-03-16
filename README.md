@@ -8,7 +8,7 @@
 
 # Load N channels images
 
-    # in deeplab/code/src/caffe/util
+    # in deeplab/code/src/caffe/util/io.cpp
     # cv::Mat ReadImageToCVMat(
     //cv::Mat cv_img_origin = cv::imread(filename, cv_read_flag);
     cv::Mat cv_img_origin = cv::imread(filename, CV_LOAD_IMAGE_UNCHANGED);

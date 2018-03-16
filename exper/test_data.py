@@ -28,7 +28,7 @@ plt.rcParams['image.cmap'] = 'gray'  # use grayscale output rather than a (poten
 
 def main():
     # Check trained weights exist
-    model_weights = '/home/gpu_user/assia/ws/tf/deeplab/exper/antoine/config/resnet/train_iter_20000.caffemodel'
+    model_weights = '/home/gpu_user/assia/ws/tf/deeplab/exper/antoine/model/resnet/train_iter_19746.caffemodel'
     if os.path.isfile(model_weights):
       print 'Old weigths found'
     else:
@@ -45,12 +45,20 @@ def main():
     for batch_index in range(1):
         image = new_solver.net.blobs['data'].data[batch_index]
         label = new_solver.net.blobs['label'].data[batch_index]
+        fc_fusion = new_solver.net.blobs['fc_fusion'].data[batch_index]
 
         label = label.transpose(1,2,0)
+        fc_fusion = fc_fusion.transpose(1,2,0)
+
+        print("label.shape: ", label.shape)
+        print("fc_fusion.shape: ", fc_fusion.shape)
+
+        tp = np.sum(label==fc_fusion)
+        print("tp: ", tp)
         #print('image_shape', image.shape)
         #print('label_shape', label.shape)
 
-        mean = (104.008, 116.669, 122.675, 128.00)
+        mean = (85.3324339, 101.40628867, 91.03148175, 106.98119159)
         image_processed = tools.deprocess_net_image_multi_channel(image, mean)
         
         image_bgr = image_processed[:,:,0:3]
