@@ -1,15 +1,12 @@
 #!/bin/bash 
 
-ROOT_DIR=/home/gpu_user/assia/ws/tf/deeplab
-DATA_ROOT_DIR=/home/gpu_user/assia/ws/datasets/
-###########################################
-# You can either use this script to generate the DenseCRF post-processed results
-# or use the densecrf_layer (wrapper) in Caffe
-###########################################
-DATASET=antoine
-XP_NAME=bgrir_sgd
 
-# specify the parameters
+# DO NOT CHANGE UNLESS YOU KNOW WHAT YOU ARE DOING
+ROOT_DIR=/home/gpu_user/assia/ws/tf/deeplab
+DATA_ROOT_DIR=/home/gpu_user/AgroParisTech/data/new_dataset/
+CRF_DIR=${ROOT_DIR}/code/densecrf
+
+# Crf parameter 
 MAX_ITER=10
 
 Bi_W=4
@@ -23,14 +20,16 @@ POS_W=3
 POS_X_STD=3
 POS_Y_STD=3
 
-SAVE_DIR=${ROOT_DIR}/exper/${DATASET}/res/${TEST_SET}/bin
-CRF_DIR=${ROOT_DIR}/code/densecrf
+# TODO Your changes 
+DATASET=Data2015
+XP_NAME=bgrir_sgd
 
-IMG_DIR_NAME="${DATA_ROOT_DIR}"antoine 
-IMG_DIR=${IMG_DIR_NAME}/63000_PPMImages
 
+
+SAVE_DIR=${ROOT_DIR}/exper/antoine/res/${XP_NAME}/bin
+IMG_DIR="${DATA_ROOT_DIR}""${DATASET}"/Valid/PPMImages/
 CRF_BIN=${CRF_DIR}/prog_refine_pascal_v4
-FEATURE_DIR=${ROOT_DIR}/exper/${DATSET}/features/${TEST_SET}
+FEATURE_DIR=${ROOT_DIR}/exper/antoine/features/${XP_NAME}
 
 mkdir -p ${SAVE_DIR}
 

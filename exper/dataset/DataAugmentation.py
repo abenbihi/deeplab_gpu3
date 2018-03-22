@@ -1,10 +1,28 @@
+"""
+Previous data augmentation on 
+0 :: 5114 :: Fruit orchards 
+2 :: 5113 :: Tree Farms
+3 :: 63 :: Continental water shores
+4 :: 211 :: Vineyards
+7 :: 52 :: Chopping areas
+12 :: 142 :: Dumps and Extraction classes
+
+Data augmentation on new dataset
+9 :: 5114 :: Fruit orchards 
+8 :: 5113 :: Tree Farms
+1 :: 63 :: Continental water shores
+13 :: 211 :: Vineyards
+10 :: 32 :: Ripariang groves
+3 :: 142 :: Dumps and Extraction classes
+"""
+
 import numpy as np
 import cv2
 import os
 
 SubImagesNamelength = 10
-#LowRep = [0,2,3,4,7,12] # under represented classes
-LowRep = [9,8,13,10,3] # under represented classes
+#LowRep = [0,2,3,4,7,12] # Previous under represented classes 
+LowRep = [9,8,13,10,3] # New under represented classes
 
 def img_namer(number):
     str1 = str(number)
@@ -58,7 +76,7 @@ def augmentData(img,label):
     return img_list, label_list
 
 data_dir='/home/gpu_user/AgroParisTech/data/new_dataset/Data2015/'
-input_dir= data_dir + 'Train/IR/'
+input_dir= data_dir + 'Train/RGB/'
 label_dir= data_dir + 'Train/Label/'
 augmented_img_dir = input_dir + '75000/'
 augmented_label_dir = label_dir + '75000/'
@@ -99,6 +117,7 @@ for root, dirs, files in os.walk(input_dir):
                         img_id +=1
                         augmented_img_full_path = os.path.join(augmented_img_dir, img_namer(img_id)+".png") 
                         augmented_label_full_path = os.path.join(augmented_label_dir, img_namer(img_id)+".png")
+
                         #print("augmented_img_full_path: ", augmented_img_full_path)
                         #print("augmented_label_full_path: ", augmented_label_full_path)
                         cv2.imwrite( augmented_img_full_path,img_aug)

@@ -11,14 +11,14 @@ layer {
   }
   transform_param {
     mirror: false
-    crop_size: 513
-    mean_value: 104.008
-    mean_value: 116.669
-    mean_value: 122.675
+    crop_size: 321
+    mean_value: 85.33243339
+    mean_value: 101.40628867
+    mean_value: 91.03148175
   }
   image_data_param {
-    root_folder: "/home/gpu_user/assia/ws/datasets/VOC2012_orig"
-    source: "voc12/list/val.txt"
+    root_folder: "/home/ws/datasets/CaffeAll_300IR3Set/"
+    source: "antoine/list/val.txt"
     batch_size: 1
 #    label_type: NONE
     label_type: PIXEL
@@ -21473,18 +21473,18 @@ layer {
 
 ############################### classifiers ##########################
 layer {
-  name: "fc1_voc12_c0"
+  name: "fc1_antoine_c0"
   type: "Convolution"
   bottom: "res5c"
-  top: "fc1_voc12_c0"
+  top: "fc1_antoine_c0"
   param {
-    name: "fc1_voc12_c0_w"
+    name: "fc1_antoine_c0_w"
   }
   param {
-    name: "fc1_voc12_c0_b"
+    name: "fc1_antoine_c0_b"
   }
   convolution_param {
-    num_output: 21
+    num_output: 15
     kernel_size: 3
     pad: 6
     dilation: 6
@@ -21492,18 +21492,18 @@ layer {
 }
 
 layer {
-  name: "fc1_voc12_c1"
+  name: "fc1_antoine_c1"
   type: "Convolution"
   bottom: "res5c"
-  top: "fc1_voc12_c1"
+  top: "fc1_antoine_c1"
   param {
-    name: "fc1_voc12_c1_w"
+    name: "fc1_antoine_c1_w"
   }
   param {
-    name: "fc1_voc12_c1_b"
+    name: "fc1_antoine_c1_b"
   }
   convolution_param {
-    num_output: 21
+    num_output: 15
     kernel_size: 3
     dilation: 12
     pad: 12
@@ -21511,18 +21511,18 @@ layer {
 }
 
 layer {
-  name: "fc1_voc12_c2"
+  name: "fc1_antoine_c2"
   type: "Convolution"
   bottom: "res5c"
-  top: "fc1_voc12_c2"
+  top: "fc1_antoine_c2"
   param {
-    name: "fc1_voc12_c2_w"
+    name: "fc1_antoine_c2_w"
   }
   param {
-    name: "fc1_voc12_c2_b"
+    name: "fc1_antoine_c2_b"
   }
   convolution_param {
-    num_output: 21
+    num_output: 15
     kernel_size: 3
     dilation: 18
     pad: 18
@@ -21530,18 +21530,18 @@ layer {
 }
 
 layer {
-  name: "fc1_voc12_c3"
+  name: "fc1_antoine_c3"
   type: "Convolution"
   bottom: "res5c"
-  top: "fc1_voc12_c3"
+  top: "fc1_antoine_c3"
   param {
-    name: "fc1_voc12_c3_w"
+    name: "fc1_antoine_c3_w"
   }
   param {
-    name: "fc1_voc12_c3_b"
+    name: "fc1_antoine_c3_b"
   }
   convolution_param {
-    num_output: 21
+    num_output: 15
     kernel_size: 3
     dilation: 24
     pad: 24
@@ -21551,12 +21551,12 @@ layer {
 ### SUM the all branches
 
 layer {
-  bottom: "fc1_voc12_c0"
-  bottom: "fc1_voc12_c1"
-  bottom: "fc1_voc12_c2"
-  bottom: "fc1_voc12_c3"
-  top: "fc1_voc12"
-  name: "fc1_voc12"
+  bottom: "fc1_antoine_c0"
+  bottom: "fc1_antoine_c1"
+  bottom: "fc1_antoine_c2"
+  bottom: "fc1_antoine_c3"
+  top: "fc1_antoine"
+  name: "fc1_antoine"
   type: "Eltwise"
   eltwise_param {
     operation: SUM
@@ -21566,18 +21566,18 @@ layer {
 ######################## classifier for res 0.5 #################
 
 layer {
-  name: "fc1_voc12_res05_c0"
+  name: "fc1_antoine_res05_c0"
   type: "Convolution"
   bottom: "res5c_res05"
-  top: "fc1_voc12_res05_c0"
+  top: "fc1_antoine_res05_c0"
   param {
-    name: "fc1_voc12_c0_w"
+    name: "fc1_antoine_c0_w"
   }
   param {
-    name: "fc1_voc12_c0_b"
+    name: "fc1_antoine_c0_b"
   }
   convolution_param {
-    num_output: 21
+    num_output: 15
     kernel_size: 3
     pad: 6
     dilation: 6
@@ -21585,54 +21585,54 @@ layer {
 }
 
 layer {
-  name: "fc1_voc12_res05_c1"
+  name: "fc1_antoine_res05_c1"
   type: "Convolution"
   bottom: "res5c_res05"
-  top: "fc1_voc12_res05_c1"
+  top: "fc1_antoine_res05_c1"
   param {
-    name: "fc1_voc12_c1_w"
+    name: "fc1_antoine_c1_w"
   }
   param {
-    name: "fc1_voc12_c1_b"
+    name: "fc1_antoine_c1_b"
   }
   convolution_param {
-    num_output: 21
+    num_output: 15
     kernel_size: 3
     dilation: 12
     pad: 12
   }
 }
 layer {
-  name: "fc1_voc12_res05_c2"
+  name: "fc1_antoine_res05_c2"
   type: "Convolution"
   bottom: "res5c_res05"
-  top: "fc1_voc12_res05_c2"
+  top: "fc1_antoine_res05_c2"
   param {
-    name: "fc1_voc12_c2_w"
+    name: "fc1_antoine_c2_w"
   }
   param {
-    name: "fc1_voc12_c2_b"
+    name: "fc1_antoine_c2_b"
   }
   convolution_param {
-    num_output: 21
+    num_output: 15
     kernel_size: 3
     dilation: 18
     pad: 18
   }
 }
 layer {
-  name: "fc1_voc12_res05_c3"
+  name: "fc1_antoine_res05_c3"
   type: "Convolution"
   bottom: "res5c_res05"
-  top: "fc1_voc12_res05_c3"
+  top: "fc1_antoine_res05_c3"
   param {
-    name: "fc1_voc12_c3_w"
+    name: "fc1_antoine_c3_w"
   }
   param {
-    name: "fc1_voc12_c3_b"
+    name: "fc1_antoine_c3_b"
   }
   convolution_param {
-    num_output: 21
+    num_output: 15
     kernel_size: 3
     dilation: 24
     pad: 24
@@ -21642,12 +21642,12 @@ layer {
 ### SUM the all branches
 
 layer {
-  bottom: "fc1_voc12_res05_c0"
-  bottom: "fc1_voc12_res05_c1"
-  bottom: "fc1_voc12_res05_c2"
-  bottom: "fc1_voc12_res05_c3"
-  top: "fc1_voc12_res05"
-  name: "fc1_voc12_res05"
+  bottom: "fc1_antoine_res05_c0"
+  bottom: "fc1_antoine_res05_c1"
+  bottom: "fc1_antoine_res05_c2"
+  bottom: "fc1_antoine_res05_c3"
+  top: "fc1_antoine_res05"
+  name: "fc1_antoine_res05"
   type: "Eltwise"
   eltwise_param {
     operation: SUM
@@ -21658,18 +21658,18 @@ layer {
 ################### classifier for res 0.75 ###########
 
 layer {
-  name: "fc1_voc12_res075_c0"
+  name: "fc1_antoine_res075_c0"
   type: "Convolution"
   bottom: "res5c_res075"
-  top: "fc1_voc12_res075_c0"
+  top: "fc1_antoine_res075_c0"
   param {
-    name: "fc1_voc12_c0_w"
+    name: "fc1_antoine_c0_w"
   }
   param {
-    name: "fc1_voc12_c0_b"
+    name: "fc1_antoine_c0_b"
   }
   convolution_param {
-    num_output: 21
+    num_output: 15
     kernel_size: 3
     pad: 6
     dilation: 6
@@ -21677,18 +21677,18 @@ layer {
 }
 
 layer {
-  name: "fc1_voc12_res075_c1"
+  name: "fc1_antoine_res075_c1"
   type: "Convolution"
   bottom: "res5c_res075"
-  top: "fc1_voc12_res075_c1"
+  top: "fc1_antoine_res075_c1"
   param {
-    name: "fc1_voc12_c1_w"
+    name: "fc1_antoine_c1_w"
   }
   param {
-    name: "fc1_voc12_c1_b"
+    name: "fc1_antoine_c1_b"
   }
   convolution_param {
-    num_output: 21
+    num_output: 15
     kernel_size: 3
     dilation: 12
     pad: 12
@@ -21696,18 +21696,18 @@ layer {
 }
 
 layer {
-  name: "fc1_voc12_res075_c2"
+  name: "fc1_antoine_res075_c2"
   type: "Convolution"
   bottom: "res5c_res075"
-  top: "fc1_voc12_res075_c2"
+  top: "fc1_antoine_res075_c2"
   param {
-    name: "fc1_voc12_c2_w"
+    name: "fc1_antoine_c2_w"
   }
   param {
-    name: "fc1_voc12_c2_b"
+    name: "fc1_antoine_c2_b"
   }
   convolution_param {
-    num_output: 21
+    num_output: 15
     kernel_size: 3
     dilation: 18
     pad: 18
@@ -21715,18 +21715,18 @@ layer {
 }
 
 layer {
-  name: "fc1_voc12_res075_c3"
+  name: "fc1_antoine_res075_c3"
   type: "Convolution"
   bottom: "res5c_res075"
-  top: "fc1_voc12_res075_c3"
+  top: "fc1_antoine_res075_c3"
   param {
-    name: "fc1_voc12_c3_w"
+    name: "fc1_antoine_c3_w"
   }
   param {
-    name: "fc1_voc12_c3_b"
+    name: "fc1_antoine_c3_b"
   }
   convolution_param {
-    num_output: 21
+    num_output: 15
     kernel_size: 3
     dilation: 24
     pad: 24
@@ -21736,12 +21736,12 @@ layer {
 ### SUM the all branches
 
 layer {
-  bottom: "fc1_voc12_res075_c0"
-  bottom: "fc1_voc12_res075_c1"
-  bottom: "fc1_voc12_res075_c2"
-  bottom: "fc1_voc12_res075_c3"
-  top: "fc1_voc12_res075"
-  name: "fc1_voc12_res075"
+  bottom: "fc1_antoine_res075_c0"
+  bottom: "fc1_antoine_res075_c1"
+  bottom: "fc1_antoine_res075_c2"
+  bottom: "fc1_antoine_res075_c3"
+  top: "fc1_antoine_res075"
+  name: "fc1_antoine_res075"
   type: "Eltwise"
   eltwise_param {
     operation: SUM
@@ -21749,9 +21749,9 @@ layer {
 }
 ############### upsampling ##################
 layer {
-  bottom: "fc1_voc12_res05"
-  top: "fc1_voc12_res05_interp"
-  name: "fc1_voc12_res05_interp"
+  bottom: "fc1_antoine_res05"
+  top: "fc1_antoine_res05_interp"
+  name: "fc1_antoine_res05_interp"
   type: "Interp"
   interp_param {
     zoom_factor: 2
@@ -21760,9 +21760,9 @@ layer {
   }
 }
 layer {
-  bottom: "fc1_voc12_res075"
-  top: "fc1_voc12_res075_interp"
-  name: "fc1_voc12_res075_interp"
+  bottom: "fc1_antoine_res075"
+  top: "fc1_antoine_res075_interp"
+  name: "fc1_antoine_res075_interp"
   type: "Interp"
   interp_param {
     zoom_factor: 4
@@ -21774,9 +21774,9 @@ layer {
 
 ############### merging multiscale results #####################
 layer {
-  bottom: "fc1_voc12"
-  bottom: "fc1_voc12_res075_interp"
-  bottom: "fc1_voc12_res05_interp"
+  bottom: "fc1_antoine"
+  bottom: "fc1_antoine_res075_interp"
+  bottom: "fc1_antoine_res05_interp"
   top: "fc_fusion"
   name: "fc_fusion"
   type: "Eltwise"
@@ -21797,42 +21797,42 @@ layer {
   }
 }
 
-# layer {
-#   bottom: "fc1_interp"
-#   top: "fc1_interp_argmax"
-#   name: "fc1_interp_argmax"
-#   type: "ArgMax"
-#   argmax_param {
-#     axis: 1
-#   }
+#layer {
+#  bottom: "fc1_interp"
+#  top: "fc1_interp_argmax"
+#  name: "fc1_interp_argmax"
+#  type: "ArgMax"
+#  argmax_param {
+#    axis: 1
+#  }
+#}
+#layer {
+#  name: "fc1_mat"
+#  type: "MatWrite"
+#  bottom: "fc1_interp_argmax"
+#  bottom: "fc1_interp"
+#  include {
+#    phase: TEST
+#  }
+#  mat_write_param {
+#    prefix: "antoine/features/resnet/val/60k/"
+#    source: "antoine/list/val_id.txt"
+#    strip: 0
+#    period: 1
 # }
-# layer {
-#   name: "fc1_mat"
-#   type: "MatWrite"
-# #  bottom: "fc1_interp_argmax"
-#   bottom: "fc1_interp"
-#   include {
-#     phase: TEST
-#   }
-#   mat_write_param {
-#     prefix: "voc12/features/resnet/val/fc1/"
-#     source: "voc12/list/val_id.txt"
-#     strip: 0
-#     period: 1
-#   }
-# }
+#}
 
-layer {
-  name: "accuracy"
-  type: "SegAccuracy"
-  bottom: "fc1_interp"
-  bottom: "label"
-  top: "fc1_accuracy"
-  seg_accuracy_param {
-    ignore_label: 255
-    reset: false
-  }
-}
+# layer {
+#   name: "accuracy"
+#   type: "SegAccuracy"
+#   bottom: "fc1_interp"
+#   bottom: "label"
+#   top: "fc1_accuracy"
+#   seg_accuracy_param {
+#     ignore_label: 255
+#     reset: false
+#   }
+# }
 
 
 layer {
@@ -21843,46 +21843,46 @@ layer {
 }
 
 # #### crf ###
-# layer {
-#   bottom: "fc1_interp"
-#   bottom: "data_dim"
-#   bottom: "data"
-#   top: "crf_inf"
-#   name: "crf"
-#   type: "DenseCRF"
-#   dense_crf_param { 
-#      max_iter: 10
-#      pos_w: 4
-#      pos_xy_std: 1
-#      bi_w: 5
-#      bi_xy_std: 21
-#      bi_rgb_std: 3
-#  }
-#   include: { phase: TEST }
-# }
-# layer {
-#   bottom: "crf_inf"
-#   top: "crf_inf_argmax"
-#   name: "crf_inf_argmax"
-#   type: "ArgMax"
-#   argmax_param {
-#     axis: 1
-#   }
-# }
-# layer {
-#   name: "crf_mat"
-#   type: "MatWrite"
-#   bottom: "crf_inf_argmax"
-#   include {
-#     phase: TEST
-#   }
-#   mat_write_param {
-#     prefix: "voc12/features/resnet/val/crf/"
-#     source: "voc12/list/val${TEST_SET_POSTFIX}_id.txt"
-#     strip: 0
-#     period: 1
-#   }
-# }
+layer {
+  bottom: "fc1_interp"
+  bottom: "data_dim"
+  bottom: "data"
+  top: "crf_inf"
+  name: "crf"
+  type: "DenseCRF"
+  dense_crf_param { 
+     max_iter: 10
+     pos_w: 4
+     pos_xy_std: 1
+     bi_w: 5
+     bi_xy_std: 21
+     bi_rgb_std: 3
+ }
+  include: { phase: TEST }
+}
+layer {
+  bottom: "crf_inf"
+  top: "crf_inf_argmax"
+  name: "crf_inf_argmax"
+  type: "ArgMax"
+  argmax_param {
+    axis: 1
+  }
+}
+layer {
+  name: "crf_mat"
+  type: "MatWrite"
+  bottom: "crf_inf_argmax"
+  include {
+    phase: TEST
+  }
+  mat_write_param {
+    prefix: "antoine/features/resnet/val/crf/"
+    source: "antoine/list/val_id.txt"
+   strip: 0
+   period: 1
+ }
+}
 
 # # add accuracy layer for evaluating val result
 # layer {
