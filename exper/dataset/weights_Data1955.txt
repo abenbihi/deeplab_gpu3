@@ -1,0 +1,15 @@
+class0_weighting: 0.8682
+class1_weighting: 0.4272
+class2_weighting: 0.5416
+class3_weighting: 0.4114
+class4_weighting: 0.2362
+class5_weighting: 0.2068
+class6_weighting: 0.2162
+class7_weighting: 0.3474
+class8_weighting: 1.3449
+class9_weighting: 0.4542
+class10_weighting: 2.2433
+class11_weighting: 0.7124
+class12_weighting: 0.0000
+class13_weighting: 0.0000
+class14_weighting: 1.1587

@@ -1,0 +1,16 @@
+train_net: "antoine/config/deeplab_bgr2015/train_train.prototxt"
+
+iter_size: 8
+lr_policy: "poly"
+power: 0.9
+base_lr: 2.5e-4
+
+average_loss: 20
+display: 500
+max_iter: 30000
+momentum: 0.9
+weight_decay: 0.0005
+
+snapshot: 5000
+snapshot_prefix: "antoine/model/deeplab_bgr2015_sgd/train"
+solver_mode: GPU
