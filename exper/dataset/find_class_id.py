@@ -27,8 +27,6 @@ for root, dirs, files in os.walk(val_label_dir):
             f_full_path = os.path.join(d_full_path, f)
             label_map = cv2.imread(f_full_path, cv2.IMREAD_UNCHANGED)
             label_id,count = np.unique(label_map,return_counts = True)
-            
-
         
             for i in range(count.shape[0]):
                 if label_id[i]==0:

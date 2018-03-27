@@ -196,12 +196,23 @@ You should have files with the name of the images for train and test. Copy them:
 	cp val.txt antoine/list/<dataset name>/
 	cp val_id.txt antoine/list/<dataset name>/
 
+If the path to the images is not correct, change it in vim
+
+	vim train.txt
+	:%s/\/home\/gpu_user\/AgroParisTech\/data\/new_dataset/\/home\/ws\/datasets/g
+
 Copy the network model into config
 
 	cp *.prototxt antoine/resnet/config/<xp name>
 	
 	# If you finetune from something different that what is provided by deeplab
 	cp *.caffemodel antoine/resnet/config/<xp name> 
+
+Create the directory to store intermediate weights
+	
+	cd antoine/model/
+	mkdir <xp name>
+	chmod 777 -R <xp name>
 
 ### Make everything 777
 	
@@ -239,6 +250,11 @@ Train
 	cd exper
 	caffe train --solver=antoine/config/<xp name>/solver_train.prototxt --weights=antoine/config/train_iter_20000.caffemodel
 
+Train on GPU3:
+    
+    /home/gpu_user/assia/ws/tf/deeplab/code/.build_release/tools/caffe.bin train --solver=antoine/config/deeplab_bgr2015/solver_train_sgd.prototxt \
+    --weights=antoine/config/resnet/train_iter_20000.caffemodel  2>&1 | tee antoine/model/deeplab_bgr2015_sgd/30000.log
+    
 Wait for 5 days ...
 
 
@@ -285,7 +301,16 @@ Comment everything under
 
 Generates the results. It takes time, it is normal
 	
-	caffe test --model=antoine/config/resnet/bgr_adam/test_val.prototxt --weights=antoine/model/resnet/bgr_adam/train_iter_120000.caffemodel --gpu=0 --iterations=<NUM TEST IMAGE>
+	caffe test --model=antoine/config/resnet/bgr_adam/test_val.prototxt \
+    --weights=antoine/model/resnet/bgr_adam/train_iter_120000.caffemodel \
+    --gpu=0 --iterations=<NUM TEST IMAGE>
+
+On GPU3
+
+   /home/gpu_user/assia/ws/tf/deeplab/code/.build_release/tools/caffe.bin test \
+   --model=antoine/config/deeplab_bgr2015/test_val.prototxt \
+   --weights=antoine/model/deeplab_bgr2015_sgd/train_iter_30000.caffemodel \
+   --gpu=0 --iterations=13784
 
 The feature maps are in exper/antoine/features/<xp name>
 
@@ -377,6 +402,32 @@ Specify you variables
 	matlab
 	EvalSegResults
 
+# Segnet
+
+## Compute the class weights
+
+Change the path to the directory and run 
+
+	cd exper/datasets/
+	vim cv2Corrector.py
+
+This outputs the weights in the file <dataset name> weights. Copy these weights at the end of the train_train.prototxt file.
+
+## Train
+
+Run the docker image
+
+	nvidia-docker run --volume=/opt/BenbihiAssia/deeplab/:/home/ws -it -u root segnet bash
+
+Train
+
+	caffe train --solver=antoine/config/<xp name>/solver_train.prototxt --weights=antoine/config/vgg_weights/VGG_ILSVRC_16_layers.caffemodel
+	
+
+## Update the dataset weights in the model
+
+## Generate feature maps
+
 
 # Misc 
 
@@ -388,10 +439,9 @@ The densecrf/Makefile uploaded by the docker with the deeplab-ver2 repository la
 It seems that running crf gives wrong outputs on the supelec gpu. I don't know why. 
 So i wouldn't advise to run densecrf there unless it is inside the network.
 
-- Compile the crf code
-Add the missing link to libhfd5 after -lmatio.
+- Compile the crf code. Add the missing link to libhfd5 after -lmatio.
 	
-	# In the docker image
+    # In the docker image
 	cd code/densecrf
 	vim Makefile
 	$(CC) refine_pascal_v4/dense_inference.cpp -o prog_refine_pascal_v4 $(CFLAGS) -L. -lDenseCRF -lmatio -lhdf5 -I./util/
@@ -404,35 +454,52 @@ By default, it is 'blob_0' but you may have 'blob_1' or another
   	std::string strip_pattern("_blob_1");
 
 ## Add the layer to write feature maps to your prototxt
-    # Add the following files to your caffe implementation
-        # deeplab/code/src/caffe/layers/mat_write_layer.cpp
-        # deeplab/code/include/caffe/layers/mat_write_layer.hpp
-        # deeplab/code/src/caffe/util/matio_io.cpp
-        # deeplab/code/include/caffe/util/matio_io.hpp
-    # DO NOT FORGET TO:
-        # Edit the caffe.proto file ("caffe_root"/src/caffe/proto/caffe.proto)
-            # Add the following line in the message LayerParameter
-                # optional MatWriteParameter mat_write_param = 145;
-                # DO NOT FORGET TO edit the number to one which isn't used
-            # Add the following message:
-                # message MatWriteParameter {
-                #     required string prefix = 1;
-                #     optional string source = 2 [default = ""];
-                #     optional int32 strip = 3 [default = 0];
-                #     optional int32 period = 4 [default = 1];
-                # }
-        # Edit the Makefile ("caffe_root"/Makefile) to link the matio lib
+
+Add the following files to your caffe implementation. They can be found in segnet_additions:
+	
+	deeplab/code/src/caffe/layers/mat_write_layer.cpp
+    deeplab/code/include/caffe/layers/mat_write_layer.hpp
+    deeplab/code/src/caffe/util/matio_io.cpp
+    deeplab/code/include/caffe/util/matio_io.hpp
+
+Edit the caffe.proto file ("caffe_root"/src/caffe/proto/caffe.proto). An example for segnet can be found in segenet_additions but you can't just copy paste it as each project has its own caffe.proto file.
+
+Add the following line in the message LayerParameter AND DO NOT FORGET TO edit the number to one which isn't used. The next parameter id is given in the line:
+
+	// LayerParameter next available layer-specific ID: 151
+
+Use this id and increment the id in the commented line
+	
+	optional MatWriteParameter mat_write_param = 151;
+
+	// LayerParameter next available layer-specific ID: 152
+                
+Add the following message in caffe.proto:
+
+ 	message MatWriteParameter {
+     required string prefix = 1;
+     optional string source = 2 [default = ""];
+     optional int32 strip = 3 [default = 0];
+     optional int32 period = 4 [default = 1];
+	}
+
+
+Edit the Makefile ("caffe_root"/Makefile) to link the matio lib
             # Add "USE_MATIO ?= 1" bellow "# handle IO dependencies"
             # Add the following underneath
                 # ifeq ($(USE_MATIO), 1)
                 #     LIBRARIES += matio
                 # endif
-        # Run make clean in caffe's root directory
-        # Run make all -jn with n number of workers in caffe's root directory
-    # Add the following layer to your prototxt. e.g. writing the feature map
-    # fc8_interp
-    # The layer needs a file holding the image index val_id.txt to know how to
-    # name the feature map file
+
+Compile again
+
+	cd <caffe source code>
+	make clean
+    make all -j$(nproc) tools pycaffe
+
+Add the following layer to your prototxt. e.g. writing the feature map fc8_interp
+The layer needs a file holding the image index val_id.txt to know how to name the feature map file
+
     layer {
       name: "fc8_mat"
       type: "MatWrite"
@@ -469,3 +536,12 @@ Add path to hdf5
 # Learn the crf parameters with gridsearch
 	
 	TODO
+
+# Log files
+
+- avg\_loss: iter, avg loss
+- it: iter, loss, accuracy\_fusion, avgRecall\_fusion, miou\_fusion, accuracy\_05, avgRecall\_05, miou\_05, accuracy\_075, avgRecall\_075, miou\_075, accuracy\_1, avgRecall\_1, miou\_1
+
+test 
+- it: img\_num, loss, accuracy\_fusion, avgRecall\_fusion, miou\_fusion, accuracy\_05, avgRecall\_05, miou\_05, accuracy\_075, avgRecall\_075, miou\_075, accuracy\_1, avgRecall\_1, miou\_1
+- avg: avg loss, avg score

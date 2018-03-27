@@ -17,7 +17,7 @@ layer {
     mean_value: 91.03148175
   }
   image_data_param {
-    root_folder: "/home/ws/datasets/CaffeAll_300IR3Set/"
+    root_folder: "/"
     source: "antoine/list/val.txt"
     batch_size: 1
 #    label_type: NONE
@@ -21877,7 +21877,7 @@ layer {
     phase: TEST
   }
   mat_write_param {
-    prefix: "antoine/features/resnet/val/crf/"
+    prefix: "antoine/features/test_test/"
     source: "antoine/list/val_id.txt"
    strip: 0
    period: 1

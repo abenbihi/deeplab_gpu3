@@ -21785,17 +21785,181 @@ layer {
   }
 }
 
-
-##################### original resolution #######################
+################## compute loss ####################
 layer {
-  name: "fc1_interp"
+  bottom: "label"
+  top: "label_shrink"
+  name: "label_shrink"
   type: "Interp"
-  bottom: "fc_fusion"
-  top: "fc1_interp"
   interp_param {
-    zoom_factor: 8
+    shrink_factor: 8
+    pad_beg: 0
+    pad_end: 0
   }
 }
+
+layer {
+  name: "loss"
+  type: "SoftmaxWithLoss"
+  bottom: "fc_fusion"
+  bottom: "label_shrink"
+  loss_param {
+    ignore_label: 255
+  }
+}
+
+############## Compute accuracy ###################
+
+
+layer {
+  name: "accuracy"
+  type: "SegAccuracy"
+  bottom: "fc_fusion"
+  bottom: "label_shrink"
+  top: "accuracy"
+  seg_accuracy_param {
+    ignore_label: 255
+  }
+}
+
+############## add supervsion to fc1's directly ##########
+## resolution 1
+layer {
+  name: "loss_res1"
+  type: "SoftmaxWithLoss"
+  bottom: "fc1_antoine"
+  bottom: "label_shrink"
+  loss_param {
+    ignore_label: 255
+  }
+  include: { phase: TRAIN }
+}
+layer {
+  name: "accuracy_res1"
+  type: "SegAccuracy"
+  bottom: "fc1_antoine"
+  bottom: "label_shrink"
+  top: "accuracy_res1"
+  seg_accuracy_param {
+    ignore_label: 255
+  } 
+}
+
+## resolution 3/4
+# interp layer does not support 3/4 scale for ground truth
+# instead we interpolate score map
+layer {
+  name: "loss_res075"
+  type: "SoftmaxWithLoss"
+  bottom: "fc1_antoine_res075_interp"
+  bottom: "label_shrink"
+  loss_param {
+    ignore_label: 255
+  }
+  include: { phase: TRAIN }
+}
+layer {
+  name: "accuracy_res075"
+  type: "SegAccuracy"
+  bottom: "fc1_antoine_res075_interp"
+  bottom: "label_shrink"
+  top: "accuracy_res075"
+  seg_accuracy_param {
+    ignore_label: 255
+  } 
+}
+
+## resolution 1/2
+layer {
+  bottom: "label"
+  top: "label_shrink16"
+  name: "label_shrink16"
+  type: "Interp"
+  interp_param {
+    shrink_factor: 16
+    pad_beg: 0
+    pad_end: 0
+  }
+}
+layer {
+  name: "loss_res05"
+  type: "SoftmaxWithLoss"
+  bottom: "fc1_antoine_res05"
+  bottom: "label_shrink16"
+  loss_param {
+    ignore_label: 255
+  }
+  include: { phase: TRAIN }
+}
+layer {
+  name: "accuracy_res05"
+  type: "SegAccuracy"
+  bottom: "fc1_antoine_res05"
+  bottom: "label_shrink16"
+  top: "accuracy_res05"
+  seg_accuracy_param {
+    ignore_label: 255
+  } 
+}
+
+
+
+
+#layer {
+#  name: "accuracy_res1"
+#  type: "SegAccuracy"
+#  bottom: "fc1_antoine"
+#  bottom: "label_shrink"
+#  top: "accuracy_res1"
+#  seg_accuracy_param {
+#    ignore_label: 255
+#  } 
+#}
+#
+#layer {
+#  name: "accuracy_res075"
+#  type: "SegAccuracy"
+#  bottom: "fc1_antoine_res075_interp"
+#  bottom: "label_shrink"
+#  top: "accuracy_res075"
+#  seg_accuracy_param {
+#    ignore_label: 255
+#  } 
+#}
+#
+### resolution 1/2
+#layer {
+#  bottom: "label"
+#  top: "label_shrink16"
+#  name: "label_shrink16"
+#  type: "Interp"
+#  interp_param {
+#    shrink_factor: 16
+#    pad_beg: 0
+#    pad_end: 0
+#  }
+#}
+#layer {
+#  name: "accuracy_res05"
+#  type: "SegAccuracy"
+#  bottom: "fc1_antoine_res05"
+#  bottom: "label_shrink16"
+#  top: "accuracy_res05"
+#  seg_accuracy_param {
+#    ignore_label: 255
+#  } 
+#}
+
+##################### original resolution #######################
+#layer {
+#  name: "fc1_interp"
+#  type: "Interp"
+#  bottom: "fc_fusion"
+#  top: "fc1_interp"
+#  interp_param {
+#    zoom_factor: 8
+#  }
+#}
 
 
 #### Write feature maps #####
@@ -21848,58 +22012,58 @@ layer {
 }
 
 # #### crf ###
-layer {
-  bottom: "fc1_interp"
-  bottom: "data_dim"
-  bottom: "data"
-  top: "crf_inf"
-  name: "crf"
-  type: "DenseCRF"
-  dense_crf_param { 
-     max_iter: 10
-     pos_w: 4
-     pos_xy_std: 1
-     bi_w: 5
-     bi_xy_std: 21
-     bi_rgb_std: 3
- }
-  include: { phase: TEST }
-}
-layer {
-  bottom: "crf_inf"
-  top: "crf_inf_argmax"
-  name: "crf_inf_argmax"
-  type: "ArgMax"
-  argmax_param {
-    axis: 1
-  }
-}
-layer {
-  name: "crf_mat"
-  type: "MatWrite"
-  bottom: "crf_inf_argmax"
-  include {
-    phase: TEST
-  }
-  mat_write_param {
-    prefix: "antoine/res/deeplab_bgr2015_sgd_crf_rot/bin/"
-    source: "antoine/list/Data2015/val_id_rot.txt"
-   strip: 0
-   period: 1
- }
-}
+#layer {
+#  bottom: "fc1_interp"
+#  bottom: "data_dim"
+#  bottom: "data"
+#  top: "crf_inf"
+#  name: "crf"
+#  type: "DenseCRF"
+#  dense_crf_param { 
+#     max_iter: 10
+#     pos_w: 4
+#     pos_xy_std: 1
+#     bi_w: 5
+#     bi_xy_std: 21
+#     bi_rgb_std: 3
+# }
+#  include: { phase: TEST }
+#}
+#layer {
+#  bottom: "crf_inf"
+#  top: "crf_inf_argmax"
+#  name: "crf_inf_argmax"
+#  type: "ArgMax"
+#  argmax_param {
+#    axis: 1
+#  }
+#}
+#layer {
+#  name: "crf_mat"
+#  type: "MatWrite"
+#  bottom: "crf_inf_argmax"
+#  include {
+#    phase: TEST
+#  }
+#  mat_write_param {
+#    prefix: "antoine/res/deeplab_bgr2015_sgd_crf_rot/bin/"
+#    source: "antoine/list/Data2015/val_id_rot.txt"
+#   strip: 0
+#   period: 1
+# }
+#}
 
 ##############################3
 
 # add accuracy layer for evaluating val result
-layer {
-  name: "crf_accuracy"
-  type: "SegAccuracy"
-  bottom: "crf_inf"
-  bottom: "label"
-  top: "crf_accuracy"
-  seg_accuracy_param {
-    ignore_label: 255
-    reset: false
-  }
-}
+#layer {
+#  name: "crf_accuracy"
+#  type: "SegAccuracy"
+#  bottom: "crf_inf"
+#  bottom: "label"
+#  top: "crf_accuracy"
+#  seg_accuracy_param {
+#    ignore_label: 255
+#    reset: false
+#  }
+#}

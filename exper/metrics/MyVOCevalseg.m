@@ -24,6 +24,7 @@ num_missing_img = 0;
 
 tic;
 for i=1:length(gtids)
+%for i=1:1000
     % display progress
     if toc>1
         fprintf('test confusion: %d/%d\n',i,length(gtids));
@@ -40,7 +41,8 @@ for i=1:length(gtids)
     
     % results file
     a = split(imname_full,'/'); % get 65000/img_name.png
-    imname = fullfile(a{length(a)-1}, '/', a{length(a)});
+    %imname = fullfile(a{length(a)-1}, '/', a{length(a)});
+    imname = a{length(a)};
     resfile = fullfile(VOCopts.res_dir, imname);
     try
       [resim,map] = imread(resfile);

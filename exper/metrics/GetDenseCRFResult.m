@@ -1,9 +1,9 @@
-% compute the densecrf result (.bin) to png
-%
+% convert the network output with crf outside network : bin 2 png
 
-xp_name = 'bgrir_adam'
+xp_name = 'deeplab_bgr2015_sgd_crf'
 
-map_folder = fullfile('/home/gpu_user/assia/ws/tf/deeplab/exper/antoine/res/', xp_name, '/bin/');
+%map_folder = fullfile('/home/gpu_user/assia/ws/tf/deeplab/exper/antoine/res/', xp_name, '/bin/');
+map_folder = fullfile('/home/gpu_user/assia/ws/tf/deeplab/exper/antoine/features/', xp_name);
 fprintf(1,' from %s\n', map_folder);
 map_dir = dir(fullfile(map_folder, '*.bin'));
 

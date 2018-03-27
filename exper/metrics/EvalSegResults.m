@@ -1,10 +1,5 @@
 SetupEnv;
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% You do not need to chage values below
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-
 VOCopts = GetVOCopts();
 
 % get iou score

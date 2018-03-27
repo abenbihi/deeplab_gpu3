@@ -1,6 +1,9 @@
 
 import os
 
+TRAIN_VAL=1 #write train.txt and val.txt
+VAL_ID=1 # write val_id.txt
+VAL_LABEL=1 # write val_label_img.txt
 
 def dir2file(input_dir, label_dir, list_file):
 
@@ -36,7 +39,7 @@ def val2valid(val_filename, val_id_filename):
         img_name = full_img_name.split("/")[-1]
         img_id = img_name.split(".")[0]
         
-        # Why did I want to do this ?
+        # why did i want to do this ?
         #find = img_id.find("0")
         #while find == 0 and len(img_id)>1:
         #    img_id = img_id[1:]
@@ -46,6 +49,20 @@ def val2valid(val_filename, val_id_filename):
 
     fval.close()
     fval_id.close()
+
+def val2label(val_filename, val_label_filename):
+    if os.path.exists(val_label_filename):
+        os.remove(val_label_filename)
+
+    fval = open(val_filename)
+    fval_label = open(val_label_filename,'w')
+
+    for l in fval:
+        full_label_name = l.split()[1] 
+        fval_label.write(full_label_name + "\n")
+
+    fval.close()
+    fval_label.close()
 
 
 
@@ -58,7 +75,8 @@ data_dir='/home/gpu_user/AgroParisTech/data/new_dataset/Data2015/'
 label_dir= data_dir + 'Train/Label/'
 input_dir= data_dir + 'Train/IR/'
 list_file = input_dir + 'train.txt'
-dir2file(input_dir, label_dir, list_file)
+if TRAIN_VAL==1:
+    dir2file(input_dir, label_dir, list_file)
 
 
 # IR Valid
@@ -66,22 +84,33 @@ label_dir= data_dir + 'Valid/Label/'
 input_dir= data_dir + 'Valid/IR/'
 list_file = input_dir + 'val.txt'
 id_file = input_dir + 'val_id.txt'
-dir2file(input_dir, label_dir, list_file)
-val2valid(list_file, id_file)
+label_file = input_dir + 'val_label_img.txt'
+if TRAIN_VAL==1:
+    dir2file(input_dir, label_dir, list_file)
+if VAL_ID==1:
+    val2valid(list_file, id_file)
+if VAL_LABEL==1:
+    val2label(list_file, label_file)
 
 # IR Train
 label_dir= data_dir + 'Train/Label/'
 input_dir= data_dir + 'Train/RGB/'
 list_file = input_dir + 'train.txt'
-dir2file(input_dir, label_dir, list_file)
+if TRAIN_VAL==1:
+    dir2file(input_dir, label_dir, list_file)
 
 # IR Valid
 label_dir= data_dir + 'Valid/Label/'
 input_dir= data_dir + 'Valid/RGB/'
 list_file = input_dir + 'val.txt'
 id_file = input_dir + 'val_id.txt'
-dir2file(input_dir, label_dir, list_file)
-val2valid(list_file, id_file)
+label_file = input_dir + 'val_label_img.txt'
+if TRAIN_VAL==1:
+    dir2file(input_dir, label_dir, list_file)
+if VAL_ID==1:
+    val2valid(list_file, id_file)
+if VAL_LABEL==1:
+    val2label(list_file, label_file)
 
 ##############
 # Data2015BW #
@@ -92,15 +121,21 @@ data_dir='/home/gpu_user/AgroParisTech/data/new_dataset/Data2015BW/'
 label_dir= data_dir + 'Train/Label/'
 input_dir= data_dir + 'Train/RGB/'
 list_file = input_dir + 'train.txt'
-dir2file(input_dir, label_dir, list_file)
+if TRAIN_VAL==1:
+    dir2file(input_dir, label_dir, list_file)
 
 # RGB Valid
 label_dir= data_dir + 'Valid/Label/'
 input_dir= data_dir + 'Valid/RGB/'
 list_file = input_dir + 'val.txt'
 id_file = input_dir + 'val_id.txt'
-dir2file(input_dir, label_dir, list_file)
-val2valid(list_file, id_file)
+label_file = input_dir + 'val_label_img.txt'
+if TRAIN_VAL==1:
+    dir2file(input_dir, label_dir, list_file)
+if VAL_ID==1:
+    val2valid(list_file, id_file)
+if VAL_LABEL==1:
+    val2label(list_file, label_file)
 
 ############
 # Data1955 #
@@ -111,12 +146,18 @@ data_dir='/home/gpu_user/AgroParisTech/data/new_dataset/Data1955/'
 label_dir= data_dir + 'Train/Label/'
 input_dir= data_dir + 'Train/RGB/'
 list_file = input_dir + 'train.txt'
-dir2file(input_dir, label_dir, list_file)
+if TRAIN_VAL==1:
+    dir2file(input_dir, label_dir, list_file)
 
 # RGB Valid
 label_dir= data_dir + 'Valid/Label/'
 input_dir= data_dir + 'Valid/RGB/'
 list_file = input_dir + 'val.txt'
 id_file = input_dir + 'val_id.txt'
-dir2file(input_dir, label_dir, list_file)
-val2valid(list_file, id_file)
+label_file = input_dir + 'val_label_img.txt'
+if TRAIN_VAL==1:
+    dir2file(input_dir, label_dir, list_file)
+if VAL_ID==1:
+    val2valid(list_file, id_file)
+if VAL_LABEL==1:
+    val2label(list_file, label_file)

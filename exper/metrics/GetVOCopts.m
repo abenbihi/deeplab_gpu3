@@ -1,22 +1,16 @@
 function VOCopts = GetVOCopts()
 %clear VOCopts
 
-% /home/gpu_user/AgroParisTech/data/dataset/CaffeAll_300IR3Set
-% /home/gpu_user/AgroParisTech/data/new_dataset/Data2015
-data_folder='/home/gpu_user/AgroParisTech/data/dataset/CaffeAll_300IR3Set/';
 
+data_root = '/home/gpu_user/AgroParisTech/data/new_dataset';
 res_root_folder ='/home/gpu_user/assia/ws/tf/deeplab/exper/antoine/res/' ;
 
-xp_name = 'bgrir_sgd/';
+data_dir='Data2015/'
+xp_name = 'deeplab_bgr2015_sgd_crf/';
 
-val_rgb_folder = '';
-
-val_label_folder = '/home/gpu_user/AgroParisTech/data/dataset/CaffeAll_300IR3Set/val_label/';
-% /home/gpu_user/AgroParisTech/data/dataset/CaffeAll_300IR3Set/val_label
-% /home/gpu_user/AgroParisTech/data/new_dataset/Data2015/Valid/Label
-
-list_folder = '/home/gpu_user/assia/ws/tf/deeplab/exper/antoine/list/';
-
+data_folder=fullfile(data_root, data_dir);
+val_label_folder = fullfile(data_folder, 'Valid/Label');
+list_folder = fullfile('/home/gpu_user/assia/ws/tf/deeplab/exper/antoine/list/', data_dir);
 VOCopts.val_list = fullfile(list_folder, '/val_label_img.txt')
 
 VOCopts.res_dir = fullfile(res_root_folder, xp_name, 'png_class/');
